@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Event Motion Assignment by Prakash Shahi Thakuri</title>
+
+  <style>
+
+
+  canvas{
+
+  width: 100%;
+  height: 750px;
+  background: white;
+  }
+
+</style>
+</head>
+<body>
+
+
+
+
+<canvas id="eventCanvas" onload="drawCanvas()" >
+
+<!-- Created by Prakash Shahi Thakuri -->
+</canvas>
+<script>
+
+  /*Created by Prakash Shahi Thakuri 
+  2019
+  CS 641 Device Motion Assignment
+  Pace University
+*/
+var width = window.innerWidth /2;
+var height = window.innerHeight;
+
+
+var c = document.getElementById("eventCanvas");
+var ctx = c.getContext("2d");
+c.width = width;
+c.height = height;
+
+
+//
+// if(window.DeviceMotionEvent===undefined)
+//     console.log("Your Browser does not support the Device Motion Event. Please view on another browser");
+
+
+     function handleMotion() {
+
+
+            //The accelerationIncludingGravity property is an object providing information about acceleration on three axis. Each axis is represented with its own property:
+
+            var x = event.accelerationIncludingGravity.x; //west to east
+            //
+            var y = event.accelerationIncludingGravity.y; //south to north
+            //
+             var z = event.accelerationIncludingGravity.z; // down to up
+
+             if( x * y* z > 0 ){
+
+                         ctx.save();
+                        ctx.translate(-(x+2), -(y+2));
+                         drawCircle(100,150,300,c.width,200, "black", "white", true,x,y); //Math.pow(10,1000) infinity value not loading
+                       }
+                     else{
+                         ctx.restore();
+                         ctx.translate((x+2), (y+2));
+                        drawCircle(100,150,300,c.width,200,"white", "black", true,x,y);
+                     }
+
+
+                     requestAnimationFrame(updateCanvas);
+                     // requestAnimationFrame(drawCanvas);
+
+}
+   // window.addEventListener("devicemotion", handleMotion , true);
+
+
+    function positiveAngle( i, j, k) {
+      if(i%2==0)
+          return   Math.PI / (k) * j;
+     else
+         return  Math.PI / (k) * j * -1 ;
+   }
+
+    function negativeAngle(i, j, k) {
+
+        if (i%2==0)
+            return  2 * Math.PI / (k) * i* -1;
+
+
+       else
+            return  2 * Math.PI / (k) * j; //angle
+
+
+
+
+   }
+
+    function drawCircle(loop, k, cont, radius, radius2, colorBlack, colorWhite, checkAngle, x, y) {
+
+
+        for(var i=0;i<loop;i++){
+
+            var r = radius - i * k;
+
+            for( var j =0; j<cont;j++){
+
+                //var angle;
+                if(checkAngle==true) //===
+                    angle=positiveAngle(i,j,cont);
+
+                else
+                    angle = negativeAngle(i,j,cont);
+
+                 x = r * Math.sin(angle) - 200;
+
+                 y = r * Math.cos(angle) + c.height ;
+
+                ctx.beginPath();
+
+                if(j%2 ==0){
+
+                    ctx.fillStyle = colorBlack;
+
+                }else{
+                    ctx.fillStyle = colorWhite;
+                }
+                ctx.arc(x,y, radius2, 0,2*Math.PI, false);
+                ctx.fill();
+            }
+             for(var j = 0; j<cont;j++){
+
+                 var angle;
+                 if(checkAngle==true)
+
+                     //  Comparison checkAngle==true may cause unexpected type coercion
+
+                     angle=positiveAngle(j,i,cont);
+                else
+                    angle = negativeAngle(i,j,cont);
+        }
+    }
+
+
+
+
+               //not loading
+
+
+}
+
+
+
+
+    function drawCanvas() {
+       window.addEventListener("devicemotion", handleMotion, false);
+       window.requestAnimationFrame(drawCanvas);
+        //working
+        //desktop onload with the new tab
+
+    }
+
+      window.addEventListener("load", drawCircle(100,150,300, c.width,200,"black","white", true,0,0), false);
+     window.requestAnimationFrame(drawCanvas);
+     window.requestAnimationFrame(drawCircle);
+
+
+
+     function updateCanvas() {
+ //onload true //drawImage Function
+        drawCanvas();
+
+         window.requestAnimationFrame(drawCanvas);
+        // window.webkitRequestAnimationFrame(drawCanvas);
+
+
+
+
+     }
+     // window.addEventListener("load", drawCircle(100,150,300, c.width,200,"blue","red", true,0,0));
+
+
+</script>
+
+</body>
+</html>
